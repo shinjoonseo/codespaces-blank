@@ -20,6 +20,9 @@ class random_game :
         print("숫자를 입력해 주세요.")
         continue
       choice_num = int(choice_num)
+      if players_num > choice_num :
+        print("제비개수가 플레이어보다 적습니다.")
+        continue
       break
     choice_list = []
     for i in range(choice_num) :
