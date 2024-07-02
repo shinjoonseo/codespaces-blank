@@ -1,4 +1,4 @@
-public class java {
+public class aa {
   public static void main(String[] args) throws Exception {
     System.out.println("Hello, World!");
   }
