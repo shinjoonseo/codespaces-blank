@@ -81,21 +81,21 @@ void loop() {
     while (cmd == 'x') {
       char cmd1 = BTSerial.read();
       if (!digitalRead(Line_R) && !digitalRead(Line_L)) {
-        analogWrite(A_1, 180);
+        analogWrite(A_1, 100);
         analogWrite(A_2, 0);
-        analogWrite(B_1, 180);
+        analogWrite(B_1, 100);
         analogWrite(B_2, 0);
       }
       else if (digitalRead(Line_R) && !digitalRead(Line_L)) {
-        analogWrite(A_1, 180);
+        analogWrite(A_1, 100);
         analogWrite(A_2, 0);
         analogWrite(B_1, 0);
-        analogWrite(B_2, 180);
+        analogWrite(B_2, 200);
       }
       else if (!digitalRead(Line_R) && digitalRead(Line_L)) {
         analogWrite(A_1, 0);
-        analogWrite(A_2, 180);
-        analogWrite(B_1, 180);
+        analogWrite(A_2, 200);
+        analogWrite(B_1, 100);
         analogWrite(B_2, 0);
       } 
       else if (digitalRead(Line_R) && digitalRead(Line_L)) {
