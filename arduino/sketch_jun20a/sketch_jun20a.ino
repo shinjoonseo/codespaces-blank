@@ -1,5 +1,4 @@
 #include <SoftwareSerial.h>
-
 #define BT_TX 12
 #define BT_RX 13
 
@@ -9,16 +8,11 @@ int B_1 = 5;
 int B_2 = 9;
 int Line_R = 7;
 int Line_L = 6;
-int d = 0 ;
-int b = 0 ;
-int r = 0 ;
-int l = 0 ;
 int trigPin = 4 ;
 int echoPin = 3 ;
 
 
-SoftwareSerial BTSerial(BT_TX,BT_RX);  // RX핀(13번)은 HM10의 TX에 연결 
-                                   // TX핀(12번)은 HM10의 RX에 연결  
+SoftwareSerial BTSerial(BT_TX,BT_RX);
 
 void setup() {  
   Serial.begin(9600);
@@ -43,7 +37,7 @@ void loop() {
   if (BTSerial.available()) {
     cmd = BTSerial.read();
     Serial.print(cmd);
-    
+
     switch (cmd) {
       case 'D' :
         analogWrite(A_1, 255);
