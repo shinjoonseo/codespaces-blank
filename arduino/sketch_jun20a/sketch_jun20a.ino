@@ -8,9 +8,8 @@ int B_1 = 5;
 int B_2 = 9;
 int Line_R = 7;
 int Line_L = 6;
-int trigPin = 4 ;
-int echoPin = 3 ;
-
+int trigPin = 4;
+int echoPin = 3;
 
 SoftwareSerial BTSerial(BT_TX,BT_RX);
 
@@ -56,7 +55,6 @@ void loop() {
         analogWrite(A_2, 0);
         analogWrite(B_1, 0);
         analogWrite(B_2, 200);
-        r = 1;
         break;
       case 'L' :
         analogWrite(A_1, 0);
@@ -71,7 +69,7 @@ void loop() {
         analogWrite(B_2, 0);
         break;
     }
-  
+
     while (cmd == 'x') {
       char cmd1 = BTSerial.read();
       if (!digitalRead(Line_R) && !digitalRead(Line_L)) {
