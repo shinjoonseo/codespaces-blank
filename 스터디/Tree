@@ -1,0 +1,39 @@
+class Node :
+  def __init__(self, data, right = None, left = None) :
+    self.data = data
+    self.right = right
+    self.left = left
+
+class Tree :
+  # 2, 3, 5, 8, 10, 11, 14, 16
+  def __init__(self):
+    self.head = Node(None)
+      
+    self.node1 = Node(2)
+    self.node2 = Node(3)
+    self.node3 = Node(5)
+    self.node4 = Node(8)
+    self.node5 = Node(10)
+    self.node6 = Node(11)
+    self.node7 = Node(14)
+    self.node8 = Node(16)
+    
+    self.root.right = self.node4
+    self.node4.left = self.node2
+    self.node2.left = self.node1
+    self.node2.right = self.node3
+    self.node4.right = self.node5
+    self.node5.right = self.node7
+    self.node7.left = self.node6
+    self.node7.right = self.node8
+
+  def pre_print(self, node = None) :
+    
+    loc_node = node
+    
+    if node == 'head' :
+      loc_node = self.head.right
+      
+    if loc_node != None :
+      print(loc_node)
+
