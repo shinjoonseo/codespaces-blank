@@ -49,7 +49,7 @@ void loop() {
     long distance = readUltrasonicDistance(); // 초음파 센서로 거리 측정
 
     // 물체가 감지되었을 때 후진을 제외한 모든 동작은 정지
-    if (distance <= 15 && distance >= 0.01 && cmd != 'B') {
+    if (distance >= 0.01 && distance <= 15 && cmd != 'B') {
       controlMotors(0, 0, 0, 0);
       Serial.println("Obstacle detected, stopping motors");
       return; // 후진이 아닌 경우는 동작하지 않음
@@ -61,7 +61,7 @@ void loop() {
       controlMotors(255, 0, 248, 0);
       while(true) {
         long new_distance = readUltrasonicDistance();
-        if (new_distance <= 20 && new_distance >= 0.01) {
+        if (new_distance >= 0.01 && new_distance <= 20) {
           controlMotors(0, 0, 0, 0);
           Serial.println("Obstacle detected, stopping motors");
           break;
@@ -82,14 +82,22 @@ void loop() {
           
           // 라인 트래킹 중에도 초음파 거리 측정
           long distanceDuringTracking = readUltrasonicDistance();
+<<<<<<< HEAD
           if (distanceDuringTracking <= 15 && distanceDuringTracking >= 0.01 ) {
+=======
+          if (distanceDuringTracking >= 0.01 && distanceDuringTracking <= 15 && cmd1 != 'B') {
+>>>>>>> 4bb627034b1c9e8cf5feb99089d660413b611a59
             controlMotors(0, 0, 0, 0);
             Serial.println("Obstacle detected during tracking, stopping motors");
             //break; // 물체가 감지되면 라인 트래킹도 중단
           }
 
           if (!digitalRead(Line_R) && !digitalRead(Line_L)) {
+<<<<<<< HEAD
             controlMotors(205, 0, 200, 0); // 직진
+=======
+            controlMotors(118, 0, 115, 0); // 직진
+>>>>>>> 4bb627034b1c9e8cf5feb99089d660413b611a59
           } 
           else if (digitalRead(Line_R) && !digitalRead(Line_L)) {
             controlMotors(0, 0, 0, 150); // 오른쪽 회피
