@@ -1,108 +1,169 @@
+// 변수세팅
+
 #include <SoftwareSerial.h>
-#define BT_TX 12
-#define BT_RX 13
 
-int A_1 = 10;
-int A_2 = 11;
-int B_1 = 5;
-int B_2 = 9;
-int Line_R = 7;
-int Line_L = 6;
-int trigPin = 4;
-int echoPin = 3;
+#define bttx 12
+#define btrx 13
 
-SoftwareSerial BTSerial(BT_TX,BT_RX);
+int l1 = 10; // 왼쪽바퀴(+)
+int l2 = 11; // 왼쪽바퀴(-)
+int r1 = 5; // 오른쪽바퀴(+)
+int r2 = 9; // 오른쪽바퀴(-)
 
-void setup() {  
-  Serial.begin(9600);
-  BTSerial.begin(9600);
-  pinMode(A_1, OUTPUT);
-  pinMode(A_2, OUTPUT);
-  pinMode(B_1, OUTPUT);
-  pinMode(B_2, OUTPUT);
-  digitalWrite(A_1, LOW);
-  digitalWrite(A_2, LOW);
-  digitalWrite(B_1, LOW);
-  digitalWrite(B_2, LOW);
+int liner = 7; // 오른쪽 센서
+int linel = 6; // 왼쪽 센서
 
-  pinMode(Line_R, INPUT);
-  pinMode(Line_L, INPUT);
+// 초음파 센서
+int trigPin = 4; // 내보냄
+int echoPin = 3; // 받아들여서 감지함 
 
-  pinMode(trigPin, OUTPUT);
-  pinMode(echoPin, INPUT);
+SoftwareSerial BtSerial(bttx, btrx);
+
+void setup(){ 
+  Serial.begin(9600); // 시리얼통신 속도 선언
+  BtSerial.begin(9600); // 초기화 선언
+  pinMode(trigPin, OUTPUT); // 포트에 전기를(무언가를 ex. 에너지) 내보내기만함(모터를 작동하기 위해서)
+  pinMode(l1, OUTPUT);
+  pinMode(l2, OUTPUT);
+  pinMode(r1, OUTPUT);
+  pinMode(r2, OUTPUT); 
+
+  pinMode(echoPin, INPUT); // 동작하기 위해 특정 값을 받아들임(ex. 앞에 물건이 있으면 물건을 인식함)
+  pinMode(liner, INPUT);
+  pinMode(linel, INPUT);
+
+  digitalWrite(l1, LOW); 
+  digitalWrite(l2, LOW);
+  digitalWrite(r1, LOW);
+  digitalWrite(r2, LOW);
 }
-void loop() {
-  char cmd ;
-  if (BTSerial.available()) {
-    cmd = BTSerial.read();
-    Serial.print(cmd);
 
-    switch (cmd) {
-      case 'D' :
-        analogWrite(A_1, 255);
-        analogWrite(A_2, 0);
-        analogWrite(B_1, 255);
-        analogWrite(B_2, 0);
-        break;
-      case 'B' :
-        analogWrite(A_1, 0);
-        analogWrite(A_2, 255);
-        analogWrite(B_1, 0);
-        analogWrite(B_2, 255);
-        break;
-      case 'R' :
-        analogWrite(A_1, 200);
-        analogWrite(A_2, 0);
-        analogWrite(B_1, 0);
-        analogWrite(B_2, 200);
-        break;
-      case 'L' :
-        analogWrite(A_1, 0);
-        analogWrite(A_2, 200);
-        analogWrite(B_1, 200);
-        analogWrite(B_2, 0);
-        break;
-      case 'S' :
-        analogWrite(A_1, 0);
-        analogWrite(A_2, 0);
-        analogWrite(B_1, 0);
-        analogWrite(B_2, 0);
-        break;
+long readUltrasonicDistance() { // 초음파 센서 거리 측정
+  long timeout = 100 * 1000L / 34 * 2;
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  long duration = pulseIn(echoPin, HIGH, timeout);
+  long distance = (duration * 0.0343) / 2; // 거리(cm) 계산
+  return distance;
+}
+
+void loop(){
+  char cmd;
+  long distance = readUltrasonicDistance();
+
+  if (BtSerial.available()) {
+    cmd = BtSerial.read();
+    Serial.print(cmd); // 확인용
+
+    if (distance < 15 && distance > 0.1 && cmd != 'S'){
+      analogWrite(l1, 0);
+      analogWrite(r1, 0);
+      analogWrite(l2, 0);
+      analogWrite(r2, 0);
+      return;
+    } 
+    if (cmd == 'D'){
+      analogWrite(l1, 255);
+      analogWrite(r1, 255);
+      analogWrite(l2, 0);
+      analogWrite(r2, 0);
+
+      while (true) {
+        long newdistance = readUltrasonicDistance();
+        if (newdistance < 15 && newdistance > 0.1){
+          analogWrite(l1, 0);
+          analogWrite(r1, 0);
+          analogWrite(l2, 0);
+          analogWrite(r2, 0);
+          break;
+        }
+        if (BtSerial.available() && BtSerial.read() == 'S'){
+          analogWrite(l1, 0);
+          analogWrite(r1, 0);
+          analogWrite(l2, 0);
+          analogWrite(r2, 0);
+          break;
+        }
+      }
+    }
+    else if (cmd == 'L'){
+      analogWrite(r1, 200);
+      analogWrite(l1, 0);
+      analogWrite(r2, 0);
+      analogWrite(l2, 200);
+    }
+    else if (cmd == 'B'){
+      analogWrite(l2, 255);
+      analogWrite(r2, 255);
+      analogWrite(l1, 0);
+      analogWrite(r1, 0);
+    }
+    else if (cmd == 'R'){
+      analogWrite(l1, 200);
+      analogWrite(l2, 0);
+      analogWrite(r1, 0);
+      analogWrite(r2, 200);
+    }
+    else if (cmd == 'S'){
+      analogWrite(r1, 0);
+      analogWrite(r2, 0);
+      analogWrite(l1, 0);
+      analogWrite(l2, 0);
+    }
+    else if (cmd == 'x'){ // 라인모드 ON
+      linemode();
+    }
+  }
+}
+
+void linemode() {
+  char cmd;
+  while (true) {
+    cmd = BtSerial.read();
+    long newdistance = readUltrasonicDistance();
+    if (newdistance < 15 && newdistance > 0.1){
+      analogWrite(l1, 0);
+      analogWrite(r1, 0);
+      analogWrite(l2, 0);
+      analogWrite(r2, 0);
+      break;
     }
 
-    while (cmd == 'x') {
-      char cmd1 = BTSerial.read();
-      if (!digitalRead(Line_R) && !digitalRead(Line_L)) {
-        analogWrite(A_1, 100);
-        analogWrite(A_2, 0);
-        analogWrite(B_1, 100);
-        analogWrite(B_2, 0);
-      }
-      else if (digitalRead(Line_R) && !digitalRead(Line_L)) {
-        analogWrite(A_1, 100);
-        analogWrite(A_2, 0);
-        analogWrite(B_1, 0);
-        analogWrite(B_2, 200);
-      }
-      else if (!digitalRead(Line_R) && digitalRead(Line_L)) {
-        analogWrite(A_1, 0);
-        analogWrite(A_2, 200);
-        analogWrite(B_1, 100);
-        analogWrite(B_2, 0);
-      } 
-      else if (digitalRead(Line_R) && digitalRead(Line_L)) {
-        analogWrite(A_1, 0);
-        analogWrite(A_2, 0);
-        analogWrite(B_1, 0);
-        analogWrite(B_2, 0);
-      }
-      if (cmd1 == 'y') {
-        analogWrite(A_1, 0);
-        analogWrite(A_2, 0);
-        analogWrite(B_1, 0);
-        analogWrite(B_2, 0);
-        break ;
-      }
+
+    if (cmd == 'y'){ // 라인모드 OFF
+      analogWrite(r1, 0);
+      analogWrite(r2, 0);
+      analogWrite(l1, 0);
+      analogWrite(l2, 0);
+      break;
+    }
+    if (digitalRead(linel) && !digitalRead(liner)){ // 오른쪽 
+      analogWrite(r1, 100);
+      analogWrite(l1, 0);
+      analogWrite(r2, 0);
+      analogWrite(l2, 0);
+    }
+    else if (!digitalRead(linel) && digitalRead(liner)){
+      analogWrite(l1, 100);
+      analogWrite(l2, 0);
+      analogWrite(r1, 0);
+      analogWrite(r2, 0);
+    }
+    else if (!digitalRead(linel) && !digitalRead(liner)){ // 왼쪽, 오른쪽 센서에 라인 감지가 안 될 때
+      analogWrite(l1, 120);
+      analogWrite(r1, 120);
+      analogWrite(l2, 0);
+      analogWrite(r2, 0);
+    }
+    else if (digitalRead(linel) && digitalRead(liner)){ // 정지선
+      analogWrite(l1, 0);
+      analogWrite(r1, 0);
+      analogWrite(l2, 0);
+      analogWrite(r2, 0);
     }
   }
 }

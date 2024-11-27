@@ -72,7 +72,7 @@ void loop() {
         }
       }
       break;
-      case 'B': controlMotors(0, 255, 0, 245); break;  // 후진
+      case 'B': controlMotors(0, 255, 0, 240); break;  // 후진
       case 'R': controlMotors(200, 0, 0, 200); break;  // 우회전
       case 'L': controlMotors(0, 200, 200, 0); break;  // 좌회전
       case 'S': controlMotors(0, 0, 0, 0); break;      // 정지
@@ -82,22 +82,22 @@ void loop() {
           
           // 라인 트래킹 중에도 초음파 거리 측정
           long distanceDuringTracking = readUltrasonicDistance();
-          if (distanceDuringTracking <= 15 && distanceDuringTracking >= 0.01 && cmd1 != 'B') {
+          if (distanceDuringTracking <= 15 && distanceDuringTracking >= 0.01 ) {
             controlMotors(0, 0, 0, 0);
             Serial.println("Obstacle detected during tracking, stopping motors");
             //break; // 물체가 감지되면 라인 트래킹도 중단
           }
 
           if (!digitalRead(Line_R) && !digitalRead(Line_L)) {
-            controlMotors(115, 0, 115, 0); // 직진
+            controlMotors(205, 0, 200, 0); // 직진
           } 
           else if (digitalRead(Line_R) && !digitalRead(Line_L)) {
             controlMotors(0, 0, 0, 150); // 오른쪽 회피
-            delay(200); //밀리초
+            delay(300); //밀리초
           } 
           else if (!digitalRead(Line_R) && digitalRead(Line_L)) {
             controlMotors(0, 150, 0, 0); // 왼쪽 회피
-            delay(200); //밀리초
+            delay(300); //밀리초
           } 
           else {
             controlMotors(0, 0, 0, 0); // 정지
