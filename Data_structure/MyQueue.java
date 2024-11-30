@@ -5,20 +5,41 @@ public class MyQueue<T> implements DataStructureInterface<T> {
   private Node<T> tail; // 큐의 마지막노드
 
 
-  public MyQueue(){
+  public MyQueue() {
     head = tail = null;
   }
 
   @Override
-  public void input(T data){
-
+  public void input(T data) {
+    Node<T> newNode = new Node<>(data);
+    if (tail != null) {
+      tail.next = newNode; // 다음 노드와 연결
+      newNode.prev = tail; // 이전 노드와 연결
+    }
+    tail = newNode;
+    if (head == null) {
+      head = tail; // 처음 노드 설정
+    }
   }  
+
   @Override
-  public T output(){
+  public T output() {
+    if (isEmpty()) {
+      System.out.println("큐가 비어있습니다.");
+    }
+    T data = head.data;
+    head = head.next; // 처음 노드를 다음으로 이동
+    if (head != null) {
+      head.prev = null; // 처음노드의 이전링크 제거
+    }
+    else{
+      tail = null; // 큐가 비어있을 경우 tall도 null로 초기화
+    }
+    return data;
   }
 
   @Override
-  public boolean isEmpty(){
-    return
+  public boolean isEmpty() {
+    return head == null;
   }
 }
