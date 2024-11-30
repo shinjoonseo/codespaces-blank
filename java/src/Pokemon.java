@@ -2,6 +2,7 @@ public abstract class Pokemon {
     private int hp;
     private int attackRate;
     private String name;
+
     Flyable flyable;
 
     public Pokemon() {  // default constructor
@@ -17,8 +18,9 @@ public abstract class Pokemon {
         this.flyable = flyable;
     }
 
-    public void performFly(){
-        this.flyable.fly();
+    public <T> void  performFly(T flyingAbility){  // generic method
+        this.flyable.fly(this);
+        System.out.println(this.getName() + "의 비행 능력 : " + flyingAbility);
     }
 
     public int getHp() {

@@ -14,21 +14,18 @@ public class Charizard extends Pokemon{
         System.out.println(this.getName() + "이(가) 광역 불장판 공격을 시전합니다~");
     }
 
-    //public void attack(Charizard targetPokemon){  // 쩜사
-    public void attack(Pokemon targetPokemon){  // 쩜사
-        System.out.println(this.getName() + "이(가) 플레임 화염공격을 "+ targetPokemon.getName()  +"에게 시전 합니다");
-        targetPokemon.setHp(targetPokemon.getHp()-this.getAttackRate());
-        if(targetPokemon.getHp() <= 0)
-            System.out.println(targetPokemon.getName() + " RIP~");
-        else
-            System.out.println(targetPokemon.getName() + "의 체력이 " + targetPokemon.getHp()+"으로 감소했습니다!");
+    //public void attack(Charizard targetPokemon){
+    public void attack(Pokemon targetPokemon){
+        //Attack<String> flameAttack = new Attack<>(getAttackRate(), "플레임 화염", "화상효과");
+        Attack<Integer> flameAttack = new Attack<>(getAttackRate(), "플레임 화염", 12000);
+        flameAttack.execute(targetPokemon);
     }
 
 //    @Override
 //    public void fly() {
 //        System.out.println(this.getName() + "이(가) 날개로 하늘을 날아갑니다~");
 //    }
-ma
+
 //    public void attack(Pikachu targetPokemon){  // 쩜사
 //        System.out.println(this.getName() + "이(가) 플레임 화염공격 합니다");
 //    }
