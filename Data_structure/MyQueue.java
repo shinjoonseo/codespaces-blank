@@ -9,5 +9,16 @@ public class MyQueue<T> implements DataStructureInterface<T> {
     head = tail = null;
   }
 
-  
+  @Override
+  public void input(T data){
+
+  }  
+  @Override
+  public T output(){
+  }
+
+  @Override
+  public boolean isEmpty(){
+    return
+  }
 }
