@@ -39,6 +39,19 @@ public class MyQueue<T> implements DataStructureInterface<T> {
   }
 
   @Override
+  public void entireprint() {
+    Node<T> current = head;
+    if (isEmpty()) {
+      System.out.println("큐가 비어있습니다.");
+    }
+    while (current != null) { // 현제값이 null일때까지 데이터를 출력한다.
+      System.out.print(current.data + ", ");
+      current = current.next; // 현제값을 다음 노드로 변경
+    }
+    System.out.println();
+  }
+
+  @Override
   public boolean isEmpty() {
     return head == null;
   }
