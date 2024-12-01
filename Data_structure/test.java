@@ -22,7 +22,7 @@ public class test {
 
     // 큐가 비어있는지 확인
     System.out.println("큐가 비어있는가? " + queue.isEmpty());
+  }
 }
-}
-  
+
 
