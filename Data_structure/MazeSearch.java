@@ -35,8 +35,9 @@ public class MazeSearch {
         System.out.println("BFS미로의 경로: ");
         queue.entireprint();
         return true;
+      }
     }
-
   }
 }
+
 
