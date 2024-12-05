@@ -1,8 +1,13 @@
 package Data_structure;
 
 public class MazeSearch {
+  
+  private static int[][] move = {{0,1},{1,0},{-1,0},{0,-1}};
 
-  private int[][] move = {{0,1},{1,0},{-1,0},{0,-1}};
+  private static boolean isValid (int[][] maze, int x, int y) {
+    return x >= 0 && y >= 0 && x< maze.length && y < maze[0].length && maze[x][y] == 0;
+  }
+
   public static boolean DFS (int[][] maze, int startX, int startY, int endX, int endY) {
     DataStructureInterface<int[]> stack = new MyStack<>();
     stack.input(new int[]{startX, startY}); // 시작 지점
@@ -36,12 +41,11 @@ public class MazeSearch {
         queue.entireprint();
         return true;
       }
+      for (int[] dir : move) {
+
+      }
     }
   }
-  private static boolean isValid (int[][] maze, int x, int y) {
-    return 
-  }
-
 }
 
 
