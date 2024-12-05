@@ -38,6 +38,11 @@ public class MazeSearch {
       }
     }
   }
+  private static boolean isValid (int[][] maze, int x, int y) {
+    return 
+  }
+
 }
+
 
 
