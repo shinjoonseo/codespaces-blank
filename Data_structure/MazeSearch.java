@@ -92,11 +92,8 @@ public class MazeSearch {
         {1, 1, 0, 0, 0, 0}
     };
 
-    // BFS를 호출해 경로를 탐색
-    boolean pathFound = BFS(maze, 0, 0, 5, 5);
-
     // 결과 출력
-    if (pathFound) {
+    if (BFS(maze, 0, 0, 5, 5)) {
         System.out.println("\n경로를 성공적으로 찾았습니다!");
     } else {
         System.out.println("\n경로를 찾을 수 없습니다.");
