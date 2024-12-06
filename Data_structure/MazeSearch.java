@@ -101,8 +101,7 @@ public class MazeSearch {
     } else {
         System.out.println("\n경로를 찾을 수 없습니다.");
     }
-
-}
+  }
 }
 
 
