@@ -30,6 +30,8 @@ public class MazeSearch {
     DataStructureInterface<int[]> queue = new MyQueue<>();
     queue.input(new int[]{startX, startY});
     maze [startX][startY] = 2;
+    int[][] path = new int[maze.length * maze[0].length][2]; // 경로를 저장할 배열
+    int pathIndex = 0; // 경로 인덱스
 
     while (!queue.isEmpty()) {
       int[] current = queue.output();
@@ -39,8 +41,10 @@ public class MazeSearch {
       if (currentX == endX && currentY == endY) {
         System.out.println("BFS미로의 경로: ");
         //도착 지점까지의 경로 복원
-        while (maze[currentX][currentY] != 2) { // 도착지점까지 반복 
-          System.out.print("[" + currentX + ", " + currentY + "] ");
+        while (maze[currentX][currentY] != 2) {
+          path[pathIndex][0] = currentX;
+          path[pathIndex][1] = currentY;
+          pathIndex++;
 
           for (int[] search : move) {
             int newX = currentX + search[0];
@@ -53,11 +57,18 @@ public class MazeSearch {
             }
           }
         }
-        //출발지점 출력
-        System.out.print("[" + currentX + ", " + currentY + "]");
+        // 출발지 추가
+        path[pathIndex][0] = startX;
+        path[pathIndex][1] = startY;
+        // 경로 출력
+        for (int i = pathIndex; i >= 0; i--) {
+        System.out.print("[" + path[i][0] + ", " + path[i][1] + "] ");
+        }
+
         System.out.println();
         return true;
       }
+      //주변 탐색
       for (int[] search : move) {
         int newX = currentX + search[0];
         int newY = currentY + search[1];
@@ -73,19 +84,16 @@ public class MazeSearch {
   public static void main(String[] args) {
     // 미로 배열 설정 (0은 이동 가능, 1은 벽)
     int[][] maze = {
-        {0, 1, 0, 0, 0},
-        {0, 1, 0, 1, 0},
-        {0, 0, 0, 1, 0},
-        {1, 1, 0, 0, 0},
-        {0, 0, 0, 1, 0}
+        {0, 1, 0, 0, 0, 1},
+        {0, 1, 0, 1, 0, 1},
+        {0, 0, 0, 1, 0, 0},
+        {1, 1, 0, 0, 0, 1},
+        {0, 0, 0, 1, 0, 1},
+        {1, 1, 0, 0, 0, 0}
     };
 
-    // 시작점과 도착점 설정
-    int startX = 0, startY = 0; // 시작점 좌표
-    int endX = 4, endY = 4;     // 도착점 좌표
-
     // BFS를 호출해 경로를 탐색
-    boolean pathFound = BFS(maze, startX, startY, endX, endY);
+    boolean pathFound = BFS(maze, 0, 0, 5, 5);
 
     // 결과 출력
     if (pathFound) {
