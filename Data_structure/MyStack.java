@@ -1,4 +1,5 @@
 package Data_structure;
+import java.util.Arrays;
 
 public class MyStack<T> implements DataStructureInterface<T>{
     private Node<T> top; // 마지막 노드
@@ -39,7 +40,16 @@ public class MyStack<T> implements DataStructureInterface<T>{
             current = current.prev;
         }
         while (current != null) {
-            System.out.print(current.data+", ");
+                // 배열인지 확인하고 배열에 맞는 방법으로 출력
+            if (current.data instanceof int[]) {
+                System.out.print(Arrays.toString((int[]) current.data) + " ");
+            } 
+            else if (current.data instanceof Object[]) {
+                System.out.print(Arrays.toString((Object[]) current.data) + " ");
+            } 
+            else {
+                System.out.print(current.data + " ");
+            }
             current = current.next;
         }
         System.out.println();

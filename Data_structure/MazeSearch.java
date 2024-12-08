@@ -10,22 +10,42 @@ public class MazeSearch {
 
   public static boolean DFS (int[][] maze, int startX, int startY, int endX, int endY) {
     DataStructureInterface<int[]> stack = new MyStack<>();
-    stack.input(new int[]{startX, startY}); // 시작 지점
-    maze [startX][startY] = 2;
+    stack.input(new int[]{startX, startY});
+    maze[startX][startY] = 2; // 방문 표시
 
     while (!stack.isEmpty()) {
-      int[] current = stack.output();
-      int currentX = current[0];
-      int currentY = current[1];
-
-      if (currentX == endX && currentY == endY) {
-        System.out.println("DFS미로의 경로: ");
-        stack.entireprint();
+      int[] current = stack.output(); // 스택에서 데이터를 제거
+      stack.input(current); // 다시 스택에 넣음
+      int x = current[0], y = current[1];
+    
+      if (x == endX && y == endY) {
+        System.out.println("DFS 경로: ");
+        stack.entireprint(); // 경로 출력
         return true;
       }
+    
+      boolean moved = false;
+    
+      for (int[] dir : move) {
+        int newX = x + dir[0];
+        int newY = y + dir[1];
+
+        if (isValid(maze, newX, newY)) {
+          stack.input(new int[]{newX, newY});
+          maze[newX][newY] = 2; // 방문 표시
+          moved = true;
+          break;
+        }
+      }
+    
+      if (!moved) {
+        stack.output(); // 이동할 수 없으면 현재 노드 제거 (백트래킹)
+      }
     }
+
     return false;
   }
+
   public static boolean BFS(int[][] maze, int startX, int startY, int endX, int endY) {
     DataStructureInterface<int[]> queue = new MyQueue<>();
     queue.input(new int[]{startX, startY});
@@ -83,17 +103,31 @@ public class MazeSearch {
   }
   public static void main(String[] args) {
     // 미로 배열 설정 (0은 이동 가능, 1은 벽)
-    int[][] maze = {
-      {0, 1, 0, 0, 0, 1},
-      {0, 1, 0, 1, 0, 1},
-      {0, 0, 0, 1, 0, 0},
-      {1, 1, 0, 0, 0, 1},
-      {0, 0, 0, 1, 0, 1},
-      {1, 1, 0, 0, 0, 0}
+    int[][] maze1 = {
+      {0, 0, 0, 0, 0, 1},
+      {0, 1, 1, 0, 0, 1},
+      {0, 1, 1, 0, 1, 1},
+      {0, 1, 0, 0, 0, 0},
+      {0, 1, 0, 1, 1, 1},
+      {0, 0, 0, 0, 0, 0}
+    };
+    int[][] maze2 = {
+      {0, 0, 0, 0, 0, 1},
+      {0, 1, 1, 0, 0, 1},
+      {0, 1, 1, 0, 1, 1},
+      {0, 1, 0, 0, 0, 0},
+      {0, 1, 0, 1, 1, 1},
+      {0, 0, 0, 0, 0, 0}
     };
 
     // 결과 출력
-    if (BFS(maze, 0, 0, 5, 5)) {
+    if (BFS(maze2, 0, 0, 5, 5)) {
+      System.out.println("\n경로를 성공적으로 찾았습니다!");
+    }
+    else {
+      System.out.println("\n경로를 찾을 수 없습니다.");
+    }
+    if (DFS(maze1, 0, 0, 5, 5)) {
       System.out.println("\n경로를 성공적으로 찾았습니다!");
     }
     else {
