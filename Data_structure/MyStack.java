@@ -1,6 +1,5 @@
 package Data_structure;
 import java.util.Arrays;
-
 public class MyStack<T> implements DataStructureInterface<T>{
     private Node<T> top; // 마지막 노드
 
